@@ -1,1 +1,3 @@
  
+Modo Linux prevê novos modos de acesso Git/Github
+Não desejável deixar acesso controlado por aplicações Microsoft
