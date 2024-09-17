@@ -1,0 +1,13 @@
+inserção de admins manualmente via sqlitebrowser
+
+cração de tabela de usuários e hierarquia
+    inserir, editar e excluir usuários(coordenadores, professores, alunos)
+#####
+
+tela de inserção de turmas e alunos [coordenadores][logado]
+tela de inserção de alunos e notas [professores][logado]
+tela de visualização de turmas [alunos][público]
+tela de visualização de turmas e notas [alunos][logado]
+
+#####
+sqlseparados
