@@ -1,8 +1,12 @@
 import sqlite3
-from flask import current_app
+from flask import current_app, jsonify
 # Inicializa o banco de dados e cria a tabela de usuários
+def conectar():
+    return sqlite3.connect('storage/acl.db')
+
 def init_db():
-    conn = sqlite3.connect('storage/acl.db')
+    conn = conectar()
+    conn.execute("PRAGMA foreign_keys = ON")  # Ativa a verificação de chaves estrangeiras
     cursor = conn.cursor()
 
     # Criação da tabela de USUÁRIOS LOGADOS
@@ -41,29 +45,33 @@ def init_db():
     )
     ''')
 
-    conn.commit()
+    cursor = conn.cursor()
     conn.close()
 
 # Função para verificar login no banco de dados
 def check_login(nome, senha):
     try:
-        conn = sqlite3.connect('storage/acl.db')
+        conn = conectar()
+        current_app.logger.info("CONN OK")
+
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM equipe WHERE nome = ? AND senha = ?', (nome, senha))
         user = cursor.fetchone()
         return user
     except sqlite3.Error as e:
-        return f'Erro ao realizar login: {e}'
+        return f'Erro ao obter aluno: {e}'
     finally:
         conn.close()
 
 
 # ### ### ### ### ### ### manipulação de equipe
 
+
 def cria_user(nome, senha, cargo):
     current_app.logger.info("ENTROU NA FUNÇÃO")
     try:
-        conn = sqlite3.connect('storage/acl.db')
+        conn = conectar()
+        conn.execute("PRAGMA foreign_keys = ON")  # Ativa a verificação de chaves estrangeiras
         if conn:
             current_app.logger.info("CONN OK")
         cursor = conn.cursor()
@@ -79,11 +87,14 @@ def cria_user(nome, senha, cargo):
     finally:
         conn.close()
 
+
 # ### ### ### ### ### ### manipulação de turmas
+
 
 def cria_turma(identificador, disciplina, professor):
     try:
-        conn = sqlite3.connect('storage/acl.db')
+        conn = conectar()
+        conn.execute("PRAGMA foreign_keys = ON")  # Ativa a verificação de chaves estrangeiras
         cursor = conn.cursor()
         cursor.execute('INSERT OR IGNORE INTO turmas (identificador, disciplina, professor) VALUES (?, ?, ?)', (identificador, disciplina, professor))
         conn.commit()
@@ -96,66 +107,113 @@ def cria_turma(identificador, disciplina, professor):
 
 
 def read_turma(turma):
-    conn = sqlite3.connect('storage/acl.db')
+    conn = conectar()
+    conn.execute("PRAGMA foreign_keys = ON")  # Ativa a verificação de chaves estrangeiras
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM turmas WHERE identificador = ?)', (turma))
     # estudar try: catch
     conn.close()
     return 1
 
+
 def update_turma(turma, disciplina):
-    conn = sqlite3.connect('storage/acl.db')
+    conn = conectar()
+    conn.execute("PRAGMA foreign_keys = ON")  # Ativa a verificação de chaves estrangeiras
     cursor = conn.cursor()
     cursor.execute('UPDATE turmas (identificador, disciplina) VALUES (?, ?)', (turma, disciplina))
     # estudar try: catch
     conn.close()
     return 1
 
+
 def delete_turma(turma):
-    conn = sqlite3.connect('storage/acl.db')
+    conn = conectar()
+    conn.execute("PRAGMA foreign_keys = ON")  # Ativa a verificação de chaves estrangeiras
     cursor = conn.cursor()
     cursor.execute('DELETE * FROM turmas WHERE identificador = ?)', (turma))
     # estudar try: catch
     conn.close()
     return 1
 
-# ### ### ### ### ### ### manipulação de ALUNOS
 
-def cria_aluno(matricula, turma):
+# ### ### ### ### ### ### GERENCIAMENTO DE ALUNOS
+
+
+def obter_alunos():
+    """Obtém todos os alunos do banco de dados."""
     try:
-        conn = sqlite3.connect('storage/acl.db')
+        conn = conectar()
+        conn.execute("PRAGMA foreign_keys = ON")  # Ativa a verificação de chaves estrangeiras
         cursor = conn.cursor()
-        cursor.execute('INSERT OR IGNORE INTO turmas (matricula, disciplina) VALUES (?, ?)', (turma, disciplina))
-        # estudar try: catch
-        return 1
-    except sqlite3.IntegrityError as e:
-        return f'Erro de integridade (provavelmente chave estrangeira): {e}'
+        cursor.execute('SELECT * FROM alunos')
+        alunos = cursor.fetchall()
+        if isinstance(alunos, str):  # Se houver um erro, `obter_alunos` retornará uma string de erro
+            return jsonify({'success': False, 'error': alunos}), 500  # Retorne um JSON de erro
+        return [{'matricula': a[0], 'turma': a[1], 'nome': a[2], 'nota': a[3]} for a in alunos]  # Retorne os dados dos alunos como JSON
     except sqlite3.Error as e:
-        return f'Erro ao inserir aluno: {e}'
+        return f"Erro ao obter alunos: {e}"
     finally:
         conn.close()
 
 
 def read_aluno(matricula):
-    conn = sqlite3.connect('storage/acl.db')
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM turmas WHERE matricula = ?)', (matricula))
-    # estudar try: catch
-    conn.close()
-    return 1
+    try:
+        conn = conectar()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM alunos WHERE matricula = ?', (matricula,))
+        aluno = cursor.fetchone()
+        return aluno
+    except sqlite3.Error as e:
+        return f'Erro ao realizar login: {e}'
+    finally:
+        conn.close()
 
-def update_turma(matricula, nome, nota):
-    conn = sqlite3.connect('storage/acl.db')
-    cursor = conn.cursor()
-    cursor.execute('UPDATE turmas (matricula, nota) VALUES (?, ?)', (matricula, nota))
-    # estudar try: catch
-    conn.close()
-    return 1
 
-def delete_turma(matricula):
-    conn = sqlite3.connect('storage/acl.db')
-    cursor = conn.cursor()
-    cursor.execute('DELETE * FROM alunos WHERE matricula = ?)', (matricula))
-    # estudar try: catch
-    conn.close()
-    return 1
+def inserir_aluno(matricula, turma, nome, nota): # NÃO TESTADO
+    """Insere um novo aluno no banco de dados."""
+    try:
+        conn = conectar()
+        conn.execute("PRAGMA foreign_keys = ON")  # Ativa a verificação de chaves estrangeiras
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO alunos (matricula, turma, nome, nota) VALUES (?, ?, ?, ?)', (matricula, turma, nome, nota))
+        conn.commit()
+        current_app.logger.info(cursor.lastrowid)
+        return cursor.lastrowid
+    except sqlite3.IntegrityError as e:
+        return f"Erro de integridade (verificar-chaves-estrangeiras) (verificar-chaves-prma rias): {e}"
+    except sqlite3.Error as e:
+        return f"Erro ao inserir aluno: {e}"
+    finally:
+        conn.close()
+
+
+def editar_aluno(matricula, turma, nome, nota): # NÃO TESTADO
+    """Edita os dados de um aluno."""
+    try:
+        conn = conectar()
+        conn.execute("PRAGMA foreign_keys = ON")  # Ativa a verificação de chaves estrangeiras
+        cursor = conn.cursor()
+        cursor.execute('UPDATE alunos SET turma = ?, nome = ?, nota = ? WHERE matricula = ?', (turma, nome, nota, matricula))
+        conn.commit()
+        return cursor.rowcount
+    except sqlite3.Error as e:
+        return f"Erro ao editar aluno: {e}"
+    finally:
+        conn.close()
+
+
+def delete_aluno(matricula):
+    try:
+        conn = conectar()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM alunos WHERE matricula = ?', (matricula,))
+        conn.commit()
+
+        if cursor.rowcount > 0:  # Verifica se uma linha foi realmente afetada
+            return True
+        else:
+            return False
+    except sqlite3.Error as e:
+        return f'Erro ao excluir aluno: {e}'
+    finally:
+        conn.close()
