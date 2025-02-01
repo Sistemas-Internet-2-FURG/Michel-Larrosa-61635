@@ -8,7 +8,7 @@ info:
     TAREFA DE SISTEMAS PARA INTERNET
 
     _Projeto iniciado no Primeiro semestre de 2024_
-    [github](https://github.com/endereçodorepositorio).
+    [github](https://github.com/Sistemas-Internet-2-FURG/Michel-Larrosa-61635/tree/main/Avalia%C3%A7%C3%B5es/Trabalhos).
 
     Requisitos `API/Banco de Dados` :
     - requisições CRUD
@@ -170,7 +170,7 @@ paths:
     delete:
       tags:
         - aluno
-      summary: Deletes a aluno
+      summary: Deletes an existing aluno
       description: delete a aluno
       operationId: deleteAluno
       parameters:
@@ -194,7 +194,6 @@ paths:
         - alunoturma_auth:
             - write:alunos
             - read:alunos
-
 
 
   /alunos/{alunoId}:
