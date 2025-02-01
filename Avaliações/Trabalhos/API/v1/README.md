@@ -27,4 +27,4 @@ php -S localhost:8010
 ```bash
 python3 -m http.server 8010
 ```
-**Insira o caminho no Swagger UI:** `localhost:8010/openapi.yaml` ou `localhost:8010/openapi.json`
+**Insira o caminho no Swagger UI:** `localhost:8010/openapi.yaml`
