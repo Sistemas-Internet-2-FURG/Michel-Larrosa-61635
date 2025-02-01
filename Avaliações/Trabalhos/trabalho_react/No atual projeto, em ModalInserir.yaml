@@ -1,0 +1,9 @@
+No atual projeto, em ModalInserir.js,
+ao "click" de SUBMIT que parece ser gerenciado pela função 'handleSubmit', 
+a qual deveria enviar a requisição e fechar o modal. 
+Em "App.js", que chama o modal, há a função 'handleNewAlunoSubmit' 
+que aparentemente executa a criação de usuário mas não é chamada em momento algum. 
+Na interface a chamada do modal funciona, 
+mas ao clicar em inserir, nenhuma requisição é exectada e o modal continua aberto, 
+a única diferença é um log no console que mostra os dados a serem inseridos, 
+e nada acontece. Poderia me guiar no entendimento do que está acontecendo?

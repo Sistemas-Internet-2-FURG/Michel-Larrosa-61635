@@ -1,0 +1,5 @@
+
+14/01/1984
+
+Crie uma página que contenha: um menu de topo, fixo durante a rolagem, com os itens "Inicio", "Pessoas" e "Salas", além de um campo de login/logout no canto direito e um logo png escrito "AKAD" no canto esquerdo; uma "div" principal com uma tabela com 4 colunas sendo ID, NOME, SALA, NOTA e ao final de cada linha um botão de editar ; uma div lateral com botões de "inserir pessoa" e "excluir pessoa", nessa div abaixo dos botões devem ter quadros para informações gerais.
+Use React.JS para estilizar o template da página, use tons de "azul marinho terno" para a a visão principal da página e tons de laranja, variando de laranja amarelado a laranja avermelhado, para os detalhes. Os botões devem abrir, cada um, um Modal para colocação de dados; o botão de "Inserir" abre um modal de formulário com ID, NOME; o botão de "Editar" abre um modal de formulário com ID, NOME, SALA, NOTA; o botão de "Excluir" abre um modal de formulário com ID.
