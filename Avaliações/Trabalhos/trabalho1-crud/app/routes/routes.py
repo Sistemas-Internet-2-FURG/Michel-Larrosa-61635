@@ -5,57 +5,51 @@ import logging
 logging.basicConfig(level=logging.DEBUG)  # Configura o nível do log para DEBUG
 
 from app.routes.auth import acl
-from .routes.auth import acl
+from app.routes.auth import acl
 from app.models import *
 
 # Definindo um blueprint para as rotas principais
 main = Blueprint('main', __name__)
 
-# Definindo um blueprint para as rotas principais
-API_routes = Blueprint('API_routes', __name__)
-
 # ROTAS PARA CARREGAMENTO DE TEMPLATES ### ### ROTAS WEB ### ### ### ### ### ### ### ### ### ###
-
 
 # Rota PÚBLICO (acesso livre a todos)
 # Mostrar turmas com número de alunos
-# Selcionar/Clicar turma e mostrar a lista de alunos
+# Selecionar/Clicar turma e mostrar a lista de alunos
+
 @main.route('/')
 def publico():
     return render_template('index.html')
 
+@main.route('/testes')
+def testes():
+    return render_template('testes.html')
+
 # Rota ALUNOS (PROFESSOR e superiores)
 @main.route('/alunos')
 def alunos():
-    if not acl('PROFESSOR'):
-        flash('Acesso negado.', 'danger')
-        return redirect(url_for('main.publico'))
+    # if not acl('PROFESSOR'):
+    #     flash('Acesso negado.', 'danger')
+    #     return redirect(url_for('main.publico'))
     return render_template('alunos.html')
-
 
 # Rota TURMAS (COORDENADOR e superiores)
 @main.route('/turmas')
 def turmas():
-    if not acl('COORDENADOR'):
-        flash('Acesso negado.', 'danger')
-        return redirect(url_for('main.publico'))
+    # if not acl('COORDENADOR'):
+    #     flash('Acesso negado.', 'danger')
+    #     return redirect(url_for('main.publico'))
     return render_template('turmas.html')
-
 
 # Rota DIRETOR (somente DIRETOR)
 @main.route('/equipe')
 def equipe():
-    if not acl('DIRETOR'):
-        flash('Acesso negado.', 'danger')
-        return redirect(url_for('main.publico'))
+    # if not acl('DIRETOR'):
+    #     flash('Acesso negado.', 'danger')
+    #     return redirect(url_for('main.publico'))
     return render_template('equipe.html')
 
-
-
-
-
 # ROTAS ANTIGAS ### ### ROTAS ANTIGAS ### ### ### ### ### ### ### ### ### ###
-
 
 @main.route('/turmas/incluir')
 def turmas_incluir():

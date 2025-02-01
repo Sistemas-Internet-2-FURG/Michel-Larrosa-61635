@@ -1,5 +1,5 @@
 from flask import Blueprint, request, redirect, url_for, session, flash, render_template
-from app.models import check_login
+from app.models import check_login  # função importada
 
 # Definindo um blueprint para as rotas de autenticação
 auth= Blueprint('auth', __name__)
@@ -14,6 +14,7 @@ def login():
             username = request.form['username']
             password = request.form['password']
             user = check_login(username, password)
+            print({user});
             # print(f'Todos os campos foram enviados corretamente: {dados}')
             if user:
                 session['username'] = user[1]
@@ -21,7 +22,7 @@ def login():
                 flash('Login efetuado com sucesso!', 'success')
 
                 # Definindo cookie opcionalmente
-                response = redirect(url_for('main_routes.publico'))
+                response = redirect(url_for('main.publico'))
                 response.set_cookie('username', username)
                 return response
             else:

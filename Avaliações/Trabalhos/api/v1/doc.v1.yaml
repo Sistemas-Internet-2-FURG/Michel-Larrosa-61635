@@ -2,22 +2,20 @@ openapi: 3.0.3
 info:
   title: API DE TRABALHO PYTHON FLASK
   description: |-
-    
+
     ---
-    
+
     TAREFA DE SISTEMAS PARA INTERNET
 
-    _If you're looking for the Swagger 2.0/OAS 2.0 version of Alunoturma, then click
-    [here](https://editor.swagger.io/?url=https://alunoturma.swagger.io/v2/swagger.yaml).
-    
-    Alternatively, you can load via the `Edit > Load Alunoturma OAS 2.0` menu option!_
-    
-    Some useful links:
-    - [The Aluno turma repository](https://github.com/swagger-api/swagger-alunoturma)
-    - [The source API definition for the Aluno turma](https://github.com/swagger-api/swagger-alunoturma/blob/master/src/main/resources/openapi.yaml)
-    
+    _Projeto iniciado no Primeiro semestre de 2024_
+    [github](https://github.com/endereçodorepositorio).
+
+    Requisitos `API/Banco de Dados` :
+    - requisições CRUD
+    - relação de chave estrangeira no DB
+
     ---
-    
+
   termsOfService: http://localhost:8080/api/v1/terms
   contact:
     email: michel@localhost
@@ -25,7 +23,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.11
-  
+
 externalDocs:
   description: Documentação da API
   url: http://localhost:8080/api/v1/docs
@@ -33,20 +31,25 @@ servers:
   - url: http://localhost:8080/api/v1
 tags:
   - name: aluno
-    description: Tudo sobre Alunos
+    description: Todo sobre Aluno, criação , atualização e exclusão
     externalDocs:
       description: sem documentos exclusivos
-      url:
+      url: https://localhost
+  - name: alunos
+    description: Acesso ao conteúdo de Alunos, individual ou ~~coletivo~~ coleção
+    externalDocs:
+      description: sem documentos exclusivos
+      url: https://localhost
   - name: turma
     description: Acesso ao gerenciamento Aluno-Turma
     externalDocs:
       description: sem documentos exclusivos
-      url:
+      url: https://localhost
   - name: equipe
     description: Access ao gerenciamento da Equipe
     externalDocs:
       description: sem documentos exclusivos
-      url:
+      url:  https://localhost
 paths:
   /aluno:
     post:
@@ -89,7 +92,46 @@ paths:
     put:
       tags:
         - aluno
-      summary: Update an existing aluno
+      summary: Update an existing Aluno - Full Update
+      description: Update an existing aluno by Id but with all data
+      operationId: updateAluno
+      requestBody:
+        description: Update an existent aluno in the turma
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Aluno'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Aluno'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Aluno'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aluno'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Aluno'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Aluno not found
+        '422':
+          description: Validation exception
+      security:
+        - alunoturma_auth:
+            - write:alunos
+            - read:alunos
+    patch:
+      tags:
+        - aluno
+      summary: Update an existing aluno - Partial Update
       description: Update an existing aluno by Id
       operationId: updateAluno
       requestBody:
@@ -125,7 +167,6 @@ paths:
         - alunoturma_auth:
             - write:alunos
             - read:alunos
-
     delete:
       tags:
         - aluno
@@ -140,7 +181,7 @@ paths:
           schema:
             type: string
         - name: alunoId
-          in: path
+          in: query
           description: Aluno id to delete
           required: true
           schema:
@@ -155,89 +196,13 @@ paths:
             - read:alunos
 
 
-  /aluno/findByStatus:
+
+  /alunos/{alunoId}:
     get:
       tags:
-        - aluno
-      summary: Finds Alunos by status
-      description: Multiple status values can be provided with comma separated strings
-      operationId: findAlunosByStatus
-      parameters:
-        - name: status
-          in: query
-          description: Status values that need to be considered for filter
-          required: false
-          explode: true
-          schema:
-            type: string
-            default: available
-            enum:
-              - available
-              - pending
-              - sold
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Aluno'
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Aluno'
-        '400':
-          description: Invalid status value
-      security:
-        - alunoturma_auth:
-            - write:alunos
-            - read:alunos
-  /aluno/findByTags:
-    get:
-      tags:
-        - aluno
-      summary: Finds Alunos by tags
-      description: Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
-      operationId: findAlunosByTags
-      parameters:
-        - name: tags
-          in: query
-          description: Tags to filter by
-          required: false
-          explode: true
-          schema:
-            type: array
-            items:
-              type: string
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Aluno'
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Aluno'
-        '400':
-          description: Invalid tag value
-      security:
-        - alunoturma_auth:
-            - write:alunos
-            - read:alunos
-  /aluno/{alunoId}:
-    get:
-      tags:
-        - aluno
-      summary: Find aluno by ID
-      description: Returns a single aluno
+        - alunos
+      summary: Find Aluno by ID in
+      description: Returns a single Aluno
       operationId: getAlunoById
       parameters:
         - name: alunoId
@@ -257,8 +222,8 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/Aluno'
-        '400':
-          description: Invalid ID supplied
+        '204':
+            description: Invalid ID supplied. No Content
         '404':
           description: Aluno not found
       security:
@@ -266,102 +231,33 @@ paths:
         - alunoturma_auth:
             - write:alunos
             - read:alunos
-    post:
+  /alunos/:
+    get:
       tags:
-        - aluno
-      summary: Updates a aluno in the turma with form data
-      description: ''
-      operationId: updateAlunoWithForm
-      parameters:
-        - name: alunoId
-          in: path
-          description: ID of aluno that needs to be updated
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: name
-          in: query
-          description: Name of aluno that needs to be updated
-          schema:
-            type: string
-        - name: status
-          in: query
-          description: Status of aluno that needs to be updated
-          schema:
-            type: string
-      responses:
-        '400':
-          description: Invalid input
-      security:
-        - alunoturma_auth:
-            - write:alunos
-            - read:alunos
-    delete:
-      tags:
-        - aluno
-      summary: Deletes a aluno
-      description: delete a aluno
-      operationId: deleteAluno
-      parameters:
-        - name: api_key
-          in: header
-          description: ''
-          required: false
-          schema:
-            type: string
-        - name: alunoId
-          in: path
-          description: Aluno id to delete
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '400':
-          description: Invalid aluno value
-      security:
-        - alunoturma_auth:
-            - write:alunos
-            - read:alunos
-  /aluno/{alunoId}/uploadImage:
-    post:
-      tags:
-        - aluno
-      summary: uploads an image
-      description: ''
-      operationId: uploadFile
-      parameters:
-        - name: alunoId
-          in: path
-          description: ID of aluno to update
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: additionalMetadata
-          in: query
-          description: Additional Metadata
-          required: false
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/octet-stream:
-            schema:
-              type: string
-              format: binary
+        - alunos
+      summary: Find a limited number of Aluno in Alunos
+      description: Returns a colection of Alunos
+      operationId: getAluno
       responses:
         '200':
-          description: successful operation
+          description: Requisição bem-sucedida. Os dados são retornados
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
+                $ref: '#/components/schemas/Aluno'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Aluno'
+        '204':
+          description: No Content
+        '404':
+          description: Aluno not found
       security:
+        - api_key: []
         - alunoturma_auth:
             - write:alunos
             - read:alunos
+
   /turma/inventory:
     get:
       tags:
@@ -431,7 +327,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'          
+                $ref: '#/components/schemas/Order'
             application/xml:
               schema:
                 $ref: '#/components/schemas/Order'
@@ -507,7 +403,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/User'
             application/xml:
               schema:
                 $ref: '#/components/schemas/User'
@@ -587,7 +483,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/User'
             application/xml:
               schema:
                 $ref: '#/components/schemas/User'

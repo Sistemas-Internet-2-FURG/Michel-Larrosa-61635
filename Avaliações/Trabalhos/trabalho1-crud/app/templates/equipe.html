@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Akademiq</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/style.css">
+
+<!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> -->
+<!--     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+<!--     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"> -->
+<!--     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> -->
+
+    <link rel="shortcut icon" href="{{ request.host_url }}static/favicon.ico">
+    <link rel="stylesheet" href="{{ request.host_url }}static/bootstrap@5.3.0/bootstrap.min.css">
+    <script src="{{ request.host_url }}static/bootstrap@5.3.0/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="{{ request.host_url }}static/style.css">
+    <script src="{{ request.host_url }}static/main.equipe.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
@@ -20,7 +29,7 @@
                         <a class="nav-link" href="/">Relatórios</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  href="./alunos">Alunos</a>
+                        <a class="nav-link"  href="alunos">Alunos</a>
                     </li>
                     <li class="nav-item">
                         <li class="nav-item">
@@ -39,139 +48,113 @@
         </div>
     </nav>
 
-    {% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-        <div>
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">
-            {{ message }}
-            </div>
-        {% endfor %}
-        </div>
-    {% endif %}
-    {% endwith %}
-
-    <div class="container mt-5 p-5 border border-dark rounded">
+    <div class="container mt-4 p-5 border border-dark rounded">
         <div class="row">
-            <div class="col">
-                <table class="table">
+            <!-- Tabela de Equipes -->
+            <div class="col-md-8">
+                <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Turma</th>
-                            <th>Alunos</th>
-                            <th>Máxima</th>
-                            <th>Média</th>
+                            <th>Cargo</th>
+                            <th>Matrícula</th>
+                            <th>Nome</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>1101</td>
-                            <td>55</td>
-                            <td>95</td>
-                            <td>8</td>
-                        </tr>
-                        </tbody>
+                    <tbody id="equipes-table-body">
+                        <!-- Dados dos equipes serão inseridos aqui via JavaScript -->
+                    </tbody>
                 </table>
             </div>
-            <div class="col-3">
-                <div class="row">
-                    <!--<div class="col border border-success rounded">
-                        <form>
-                          <div class="mb-3">
-                              <label for="nome" class="form-label">Nome</label>
-                              <input type="text" class="form-control" id="nome" placeholder="Digite seu nome">
-                          </div>
-                          <div class="mb-3">
 
-                              <label for="matricula" class="form-label">Matrícula</label>
-                              <input type="text" class="form-control" id="matricula"
-              placeholder="Digite sua matrícula">
-                          </div>
-                          <div class="mb-3">
-                              <label for="turma" class="form-label">Turma</label>
-                              <input type="text" class="form-control" id="turma" placeholder="Digite sua turma">
-                          </div>
-                          <div class="mb-3">
-                              <label for="nota" class="form-label">Nota</label>
-                              <input type="number" class="form-control" id="nota" placeholder="Digite sua nota">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Enviar</button>
-                      </form>
-                    </div>-->
-                    <div class="col border border-primary rounded">
-                        <ul class="list-unstyled">
-                            <li><a href="{{ request.host_url }}equipe/incluir">Adicionar Professores</a></li>
-                            <li><a href="{{ request.host_url }}equipe/editar">Alterar Funções</a></li>
-                            <li><a href="{{ request.host_url }}equipe/excluir">Excluir Professores do Sistema</a></li>
-                        </ul>
+            <!-- Links para abrir os Modais -->
+            <div class="col-md-4">
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inserirEquipeModal">Inserir Equipe</a><br><br>
+<!--                 <a href="#" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editarModal">Editar Equipe</a><br><br> -->
+                <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEquipeExcluir" id="btnExcluirEquipe">Excluir Equipe</a>
+            </div>
+        </div>
+    </div>
 
+    <!-- Modal Inserir Equipe -->
+    <div class="modal fade" id="inserirEquipeModal" tabindex="-1" aria-labelledby="inserirEquipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inserirEquipeModalLabel">Inserir Equipe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="inserirEquipeModalForm">
+                        <div class="mb-3" id="inserirEquipeModalFormDivMatricula">
+                            <label for="inserirEquipeModalMatricula" class="form-label">Matrícula</label>
+                            <input type="text" class="form-control" id="inserirEquipeModalMatricula" form="inserirEquipeModalForm" required>
+                        </div>
+                        <div class="mb-3" id="inserirEquipeModalFormDivNome">
+                            <label for="inserirEquipeModalNome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="inserirEquipeModalNome" form="inserirEquipeModalForm" required>
+                        </div>
+                        <button id="inserirEquipeModalSubmit" type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Equipe -->
+    <div class="modal fade" id="EquipeEditar" tabindex="-1" aria-labelledby="EquipeEditarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="EquipeEditarLabel">Editar Equipe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="EquipeEditarForm">
+                    <div class="mb-3">
+                        <input type="hidden" id="EquipeEditarMatricula" name="EquipeEditarMatricula">
                     </div>
+                    <div class="mb-3">
+                        <label for="EquipeEditarCargo" class="form-label">Cargo</label>
+                        <input type="text" class="form-control" id="EquipeEditarCargo" name="EquipeEditarCargo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="EquipeEditarNome" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="EquipeEditarNome" name="EquipeEditarNome">
+                    </div>
+                    <div class="mb-3">
+                        <label for="EquipeEditarSenha" class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="EquipeEditarSenha" name="EquipeEditarSenha">
+                    </div>
+                    <button id="EquipeEditarSubmit" type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Excluir Equipe (para confirmar exclusão) -->
+    <div class="modal fade" id="modalEquipeExcluir" tabindex="-1" aria-labelledby="modalEquipeExcluirLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEquipeExcluirLabel">Excluir Equipe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="modalEquipeExcluirForm">
+                        <div class="mb-3">
+                            <label for="modalEquipeExcluirMatricula" class="form-label">Matrícula</label>
+                            <input type="text" class="form-control" id="modalEquipeExcluirMatricula" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalEquipeExcluirCheckout" class="form-check-label">Tenho certeza da exclusão</label>
+                            <input type="checkbox" class="form-check-input" id="modalEquipeExcluirCheckout" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger" id="modalEquipeExcluirSubmit" disabled>Excluir</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -182,7 +165,5 @@
             <span class="text-muted">&copy; 2023 Todos os direitos reservados.</span>
         </div>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
